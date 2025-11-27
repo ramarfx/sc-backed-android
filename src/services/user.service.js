@@ -1,22 +1,35 @@
 import { eq } from "drizzle-orm";
-import { db } from "../db/drizzle"
-import { users } from "../db/schema";
+import { db } from "../db/drizzle.js"
+import { users } from "../db/schema.js";
 
 export const getAllUsers = async () => {
-    const users = await db.select().from(users);
-
-    if (!users) {
-        return [];
+  const users = await db.query.users.findMany({
+    columns: {
+      id: true,
+      username: true,
+      email: true
     }
+  });
 
-    return users;
+  if (!users) {
+    return [];
+  }
+
+  return users;
 }
 
-export const getUserById = async (id) => {
-  const user = await db.select().from(users).where(eq(users.id, id))
+export const getUserByUsername = async (username) => {
+  const user = await db.query.users.findFirst({
+    where: eq(users.username, username),
+    columns: {
+      id: true,
+      username: true,
+      email: true
+    }
+  })
 
   if (!user) {
-    throw new Error('User not found')
+    return null;
   }
 
   return user;

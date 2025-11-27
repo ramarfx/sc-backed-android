@@ -1,17 +1,12 @@
 import express from 'express';
 import { authMiddleware } from '../middleware/authMiddleware.js';
+import { getAllUsers, getUserByUsername } from '../controllers/user.controller.js';
 
 export const userRouter = express.Router();
 
 userRouter.use(authMiddleware);
 
-userRouter.get('/users', (req, res) => {
-    res.json({
-        users: [
-            { id: 1, name: 'John Doe' },
-            { id: 2, name: 'Jane Doe' },
-        ]
-    })
-})
+userRouter.get('/users', getAllUsers);
+userRouter.get('/users/:username', getUserByUsername);
 
 export default userRouter;

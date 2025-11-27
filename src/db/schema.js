@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("users_table", {
@@ -23,3 +23,33 @@ export const follows = sqliteTable("follows_table", {
   followingId: int('following_id').notNull().references(() => users.id),
   createdAt: text('created_at').notNull().default(sql`(current_timestamp)`),
 })
+
+export const userRelations = relations(users, ({ many }) => ({
+  posts: many(posts),
+  followers: many(follows, {
+    fields: [users.id],
+    references: [follows.followingId]
+  }),
+  following: many(follows, {
+    fields: [users.id],
+    references: [follows.followerId]
+  }),
+}));
+
+export const postRelations = relations(posts, ({ one }) => ({
+  user: one(users, {
+    fields: [posts.userId],
+    references: [users.id],
+  }),
+}));
+
+export const followRelations = relations(follows, ({ one }) => ({
+  follower: one(users, {
+    fields: [follows.followerId],
+    references: [users.id],
+  }),
+  following: one(users, {
+    fields: [follows.followingId],
+    references: [users.id],
+  }),
+}));
