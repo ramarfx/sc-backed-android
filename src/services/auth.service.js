@@ -52,11 +52,20 @@ export const login = async (email, password) => {
     }
 }
 
-export const me = async (req) => {
-    //   const user = await db.query.users.findFirst({
-    //     where: eq(users.id, req.user.id)
-    //   })
+export const logout = async (req) => {
+    const user = req.user;
 
-    //   return user
+    const logout = await db.update(users).set({
+        token: null
+    }).where(eq(users.id, user.id));
+
+    if (!logout) {
+        throw new Error('Failed to logout');
+    }
+
+    return logout
+}
+
+export const me = async (req) => {
     return req.user
 }
