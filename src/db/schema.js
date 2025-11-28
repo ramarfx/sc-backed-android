@@ -27,12 +27,14 @@ export const follows = sqliteTable("follows_table", {
 export const userRelations = relations(users, ({ many }) => ({
   posts: many(posts),
   followers: many(follows, {
+    relationName: 'user_following',
     fields: [users.id],
-    references: [follows.followingId]
+    references: [follows.followingId], 
   }),
   following: many(follows, {
+    relationName: 'user_followers',
     fields: [users.id],
-    references: [follows.followerId]
+    references: [follows.followerId],
   }),
 }));
 
@@ -45,10 +47,12 @@ export const postRelations = relations(posts, ({ one }) => ({
 
 export const followRelations = relations(follows, ({ one }) => ({
   follower: one(users, {
+    relationName: 'user_followers',
     fields: [follows.followerId],
     references: [users.id],
   }),
   following: one(users, {
+    relationName: 'user_following',
     fields: [follows.followingId],
     references: [users.id],
   }),

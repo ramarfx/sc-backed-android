@@ -20,9 +20,9 @@ export const register = async (body) => {
         username: username,
         email: email,
         password: hashedPassword
-    })
+    }).returning();
 
-    return user
+    return user[0];
 }
 
 export const login = async (email, password) => {
