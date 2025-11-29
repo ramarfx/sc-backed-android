@@ -21,7 +21,7 @@ Start the server
 ### Register
 Untuk melakukan registrasi pada user
 
-```http
+```bash
   POST /register
 ```
 #### body
@@ -36,7 +36,7 @@ Untuk melakukan registrasi pada user
 ### Login
 untuk melakukan login menggunakan username dan password yang telah di buat tadi. Hasil dari login akan menghasilkan **token** yang akan digunakan sebagai authorization melalui header Bearer token
 
-```http
+```bash
   POST /login
 ```
 
@@ -63,18 +63,18 @@ untuk melakukan login menggunakan username dan password yang telah di buat tadi.
 ### Logout
 untuk user ketika ingin logout dengan menghapus token yang telah ter-generate tadi sehingga token akan menjadi invalid dan tidak bisa digunakan lagi 
 
-```http
+```bash
   POST /logout
 ```
 
 ### Authorization
 Untuk mengakses endpoint yang memerlukan akses login, sertakan token pada header
 
-```http
+```bash
   Authorization: Bearer {token}
 ```
 contoh:
-```http
+```bash
   Authorization: Bearer c096ea3a-ebf2-4919-a6ee-a6eead88eedf
 ```
 
@@ -82,31 +82,31 @@ contoh:
 
 #### Get Current User
 melihat data user yang sedang login saat ini
-```http
+```bash
   GET /me
 ```
 
 #### Get All User
 melihat seluruh data user
-```http
+```bash
   GET /users
 ```
 
 #### Get User By Username
 Mencari data user berdasarkan username
-```http
+```bash
   GET /users/{username}
 ```
 
 #### Follow
 merupakan endpoint untuk men-follow user melalui parameter username tujuan
-```http
+```bash
   GET /users/{username}/follow
 ```
 
 #### Unfollow
 merupakan endpoint untuk men-unfollow user melalui parameter username tujuan
-```http
+```bash
   GET /users/{username}/unfollow
 ```
 
@@ -115,18 +115,18 @@ merupakan endpoint untuk men-unfollow user melalui parameter username tujuan
 
 #### Get All Posts
 melihat semua postingan
-```http
+```bash
   GET /posts
 ```
 #### Get Post by id
 melihat postingan berdasarkan id
-```http
+```bash
   GET /posts/{id}
 ```
 
 #### Create Post
 Menambahkan postingan baru
-```http
+```bash
   POST /posts
 ```
 body: 
@@ -139,7 +139,7 @@ body:
 
 #### Update Post
 Mengubah postingan
-```http
+```bash
   PUT /posts/{id}
 ```
 body: 
@@ -152,6 +152,6 @@ body:
 
 #### Delete Post
 Menghapus postingan
-```http
+```bash
   DELETE /posts/{id}
 ```
