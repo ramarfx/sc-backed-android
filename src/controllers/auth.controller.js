@@ -12,7 +12,7 @@ export const register = async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(error.code).json({ message: error.message });
   }
 }
 
@@ -29,7 +29,7 @@ export const login = async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(error.code).json({ message: error.message });
   }
 }
 
@@ -41,7 +41,7 @@ export const logout = async (req, res) => {
       message: "User logged out successfully",
     })
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(error.code).json({ message: error.message });
   }
 }
 
@@ -55,6 +55,6 @@ export const me = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(error.code).json({ message: error.message });
   }
 }

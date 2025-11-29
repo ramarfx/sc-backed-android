@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/drizzle.js"
 import { users } from "../db/schema.js";
+import { ErrorResponse } from "../utils/ErrorResponse.js";
 
 export const getAllUsers = async () => {
   const users = await db.query.users.findMany({
@@ -60,7 +61,7 @@ export const getUserByUsername = async (username) => {
   const followingCount = following?.length || 0;
 
   if (!user) {
-    return null;
+    throw new ErrorResponse('User not found', 404);
   }
 
   return {

@@ -9,7 +9,7 @@ export const getAllPosts = async (req, res) => {
             data: posts
         });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(error.code).json({ message: error.message });
     }
 }
 
@@ -26,7 +26,7 @@ export const getPostById = async (req, res) => {
             data: post
         });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(error.code).json({ message: error.message });
     }
 }
 
@@ -50,7 +50,7 @@ export const createPost = async (req, res) => {
             }
         });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(error.code).json({ message: error.message });
     }
 }
 
@@ -64,10 +64,6 @@ export const updatePost = async (req, res) => {
     try {
         const post = await postService.getPostById(req.params.id);
 
-        if (!post) {
-            return res.status(404).json({ message: 'Post not found' });
-        }
-
         await postService.updatePost(req.user.id, req.params.id, req.body);
 
         return res.status(201).json({
@@ -80,7 +76,7 @@ export const updatePost = async (req, res) => {
             }
         });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(error.code).json({ message: error.message });
     }
 }
 
@@ -88,15 +84,11 @@ export const deletePost = async (req, res) => {
     try {
         const post = await postService.getPostById(req.params.id);
 
-        if (!post) {
-            return res.status(404).json({ message: 'Post not found' });
-        }
-
-        await postService.deletePost(req.params.id);
+        await postService.deletePost(post.id);
 
         return res.status(200).json({ message: 'Post deleted successfully' });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(error.code).json({ message: error.message });
     }
 }
 

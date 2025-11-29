@@ -1,12 +1,13 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../db/drizzle.js"
 import { follows } from "../db/schema.js"
+import { ErrorResponse } from "../utils/ErrorResponse.js";
 
 // follower: orang yang nge-follow
 // following: orang yang di follow
 export const follow = async (followerId, followingId) => {
     if (followerId === followingId) {
-        throw new Error('You cannot follow yourself');
+        throw new ErrorResponse('You cannot follow yourself', 400);
     }
 
     const existingFollow = await db.query.follows.findFirst({
@@ -17,7 +18,7 @@ export const follow = async (followerId, followingId) => {
     })
 
     if (existingFollow) {
-        throw new Error('You are already following this follower');
+        throw new ErrorResponse('You are already following this follower', 400);
     }
 
     const following = await db.insert(follows).values({
@@ -37,13 +38,13 @@ export const unfollow = async (follwerId, followingId) => {
     })
 
     if (!existingFollow) {
-        throw new Error('You are not following this follower');
+        throw new ErrorResponse('You are not following this follower', 400);
     }
 
     const unfollow = await db.delete(follows).where(eq(follows.id, existingFollow.id)).returning()
 
     if (!unfollow) {
-        throw new Error('Failed to unfollow');
+        throw new ErrorResponse('Failed to unfollow,', 400);
     }
 
     return unfollow

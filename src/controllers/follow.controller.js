@@ -5,10 +5,6 @@ export const follow = async (req, res) => {
     try {
         const user = await userService.getUserByUsername(req.params.username);
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
         const follow = await followService.follow(req.user.id, user.id);
 
         return res.status(200).json({
@@ -16,17 +12,13 @@ export const follow = async (req, res) => {
             data: follow
         });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(error.code).json({ message: error.message });
     }
 }
 
 export const unfollow = async (req, res) => {
     try {
         const user = await userService.getUserByUsername(req.params.username);
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
 
         const unfollow = await followService.unfollow(req.user.id, user.id);
 
@@ -35,6 +27,6 @@ export const unfollow = async (req, res) => {
             data: unfollow
         });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(error.code).json({ message: error.message });
     }
 }

@@ -21,7 +21,5 @@ export const authMiddleware = async (req, res, next) => {
 
     req.user = user;
 
-    console.log('berhasil', user)
-
     next();
 };

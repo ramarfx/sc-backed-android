@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/drizzle.js"
 import { posts } from "../db/schema.js"
+import { ErrorResponse } from "../utils/ErrorResponse.js";
 
 export const createPost = async (userId, body) => {
     const result = await db.insert(posts).values({
@@ -12,7 +13,7 @@ export const createPost = async (userId, body) => {
     const post = result[0];
 
     if (!post) {
-        throw new Error('Failed to create post');
+        throw new ErrorResponse('Failed to create post', 400);
     }
 
     return post
@@ -53,7 +54,7 @@ export const getPostById = async (id) => {
     })
 
     if (!post) {
-        return null;
+        throw new ErrorResponse('Post not found', 404);
     }
 
     return post
@@ -74,7 +75,11 @@ export const updatePost = async (userId, id, body) => {
     })
 
     if (!post) {
-        return null;
+        throw new ErrorResponse('Post not found', 404);
+    }
+
+    if (post.userId !== userId) {
+        throw new ErrorResponse('Forbidden', 403);
     }
 
     const updatedPost = await db.update(posts).set({
@@ -84,7 +89,7 @@ export const updatePost = async (userId, id, body) => {
     }).where(eq(posts.id, id)).returning()
 
     if (!updatedPost) {
-        throw new Error('Failed to update post');
+        throw new ErrorResponse('Failed to update post', 400);
     }
 
     return updatedPost
@@ -96,13 +101,17 @@ export const deletePost = async (id) => {
     })
 
     if (!post) {
-        return null;
+        throw new ErrorResponse('Post not found', 404);
+    }
+
+    if (post.userId !== id) {
+        throw new ErrorResponse('Forbidden', 403);
     }
 
     const deletedPost = await db.delete(posts).where(eq(posts.id, id))
 
     if (!deletedPost) {
-        throw new Error('Failed to delete post');
+        throw new ErrorResponse('Failed to delete post', 400);
     }
 
     return deletedPost

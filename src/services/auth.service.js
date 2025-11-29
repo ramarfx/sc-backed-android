@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../db/drizzle.js";
 import { users } from "../db/schema.js";
 import bcrypt from 'bcrypt';
+import { ErrorResponse } from "../utils/ErrorResponse.js";
 
 export const register = async (body) => {
     const { username, email, password } = body;
@@ -11,7 +12,7 @@ export const register = async (body) => {
     });
 
     if (existingUser) {
-        throw new Error('User already exists');
+        throw new ErrorResponse('User already exists');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,13 +32,13 @@ export const login = async (email, password) => {
     })
 
     if (!user) {
-        throw new Error('Email or password is incorrect');
+        throw new ErrorResponse('User not found', 404);
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-        throw new Error('Invalid password');
+        throw new ErrorResponse('email or password is invalid', 401);
     }
 
     const generateToken = crypto.randomUUID();
@@ -60,7 +61,7 @@ export const logout = async (req) => {
     }).where(eq(users.id, user.id));
 
     if (!logout) {
-        throw new Error('Failed to logout');
+        throw new ErrorResponse('Failed to logout', 400);
     }
 
     return logout
