@@ -95,7 +95,7 @@ export const updatePost = async (userId, id, body) => {
     return updatedPost
 }
 
-export const deletePost = async (id) => {
+export const deletePost = async (userId, id) => {
     const post = await db.query.posts.findFirst({
         where: eq(posts.id, id)
     })
@@ -104,7 +104,7 @@ export const deletePost = async (id) => {
         throw new ErrorResponse('Post not found', 404);
     }
 
-    if (post.userId !== id) {
+    if (post.userId !== userId) {
         throw new ErrorResponse('Forbidden', 403);
     }
 
